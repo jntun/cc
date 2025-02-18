@@ -37,12 +37,8 @@ function init()
 		end
 	end
 
-	for _, card in ipairs(deck) do
-		print(card)
-	end
-
 	idleCards = {}
-	for i=1,4 do
+	for i=1,5 do
 		idleCards[i] = card_idle_new(math.random(w), math.random(h), deck[i]:sub(1, 1), deck[i]:sub(2, 10), colors.red)
 	end
 end
