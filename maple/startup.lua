@@ -13,9 +13,9 @@ end
 function corner()
 	turtle.turnLeft()
 	turtle.forward()
-	turtle.right()
+	turtle.turnRight()
 	turtle.forward()
-	turtle.right()
+	turtle.turnRight()
 end
 
 while true do
