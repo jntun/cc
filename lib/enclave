@@ -1,0 +1,67 @@
+ENC_MAINFRAME = 0
+
+ENC_OP_BALANCE_GET = "getBalance"
+ENC_OP_BALANCE_SET = "setBalance"
+ENC_OP_USER_NEW    = "newUser"
+ENC_OP_HEARTBEAT   = "heart"
+
+ENC_CHAN_MAIN  = 10
+ENC_CHAN_REPLY = 11
+
+ENC = {
+	modem = peripheral.find("modem") or error("Enclave network requires modem for operation."),
+}
+
+function ENC:kv(o, val) -- key value
+	return o..":"..tostring(val)
+end
+
+function ENC:transmit(op, payload)
+	ENC.modem.transmit(ENC_CHAN_MAIN, ENC_CHAN_REPLY, ENC:kv(op, payload))
+end
+
+function ENC:reply(op, payload)
+	ENC.modem.transmit(ENC_CHAN_REPLY, ENC_CHAN_REPLY, ENC:kv(op, payload))
+end
+
+function _pullEvent(op)
+	local event, size, channel, replyChannel, message, distance
+	repeat
+		event, size, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+	until ak:split(message, ":")[1] == op
+	return event, size, channel, replyChannel, message, distance
+end
+
+function ENC:listen(op)
+	ENC.modem.open(ENC_CHAN_REPLY)
+	return _pullEvent(op)
+end
+
+function ENC:heartbeat()
+	ENC:transmit(ENC_OP_HEARTBEAT, "beat")
+	ENC:listen(ENC_OP_HEARTBEAT)
+	print("got pulse...")
+end
+
+function ENC:balance_get(user)
+	ENC:transmit(ENC_OP_BALANCE_GET, user)
+	ENC.modem.open(ENC_CHAN_REPLY)
+	local event, size, channel, replychannel, message, distance 
+	repeat
+		event, size, channel, replychannel, message, distance = os.pullEvent("modem_message")
+	until ak:split(message, ":")[1] == ENC_OP_BALANCE_GET
+	ENC.modem.close(ENC_CHAN_REPLY)
+	local bal = tonumber(ak:split(message, ":")[2])
+	if bal < 0 then
+		return nil
+	end
+	return bal
+end
+
+function ENC:balance_set(user, amount)
+	ENC.transmit(ENC_OP_BALANCE_SET, ENC:kv(user, amount))
+end
+
+function ENC:balance_set(user, amount)
+	ENC:transmit(ENC_OP_BALANCE_SET, ENC:kv(user, amount))
+end

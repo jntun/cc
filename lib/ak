@@ -1,0 +1,40 @@
+ak = {
+	DONT_DO_THREAD_LOOPS_FOR_DEBUG = false,
+	IS_LOCAL_DEBUG                 = false,
+	project                        = nil,
+}
+
+function ak:bool_str(bool)
+    if bool then return "true" else return "false" end
+end
+
+function ak:debug(...)
+    if not IS_LOCAL_DEBUG then
+        return false
+    end
+    write("[Debug]")
+    for i,v in ipairs(arg) do
+        write(" ")
+        write(v)
+    end
+    write("\n")
+end
+
+function ak:split(str, sep)
+    if sep == nil then
+	sep = "%s"
+    end
+    local t = {}
+    for str in string.gmatch(str, "([^"..sep.."]+)") do
+	table.insert(t, str)
+    end
+    return t
+end
+
+function ak:file(name)
+	if ak.project == nil then 
+		error("ak:file() called with ak.project being nil.")
+		return nil 
+	end
+	return "ccrepo/"..ak.project.."/"..name
+end
