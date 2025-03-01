@@ -47,3 +47,7 @@ function ak:file(name)
 	end
 	return "ccrepo/"..ak.project.."/"..name
 end
+
+function ak:lib(name)
+	return "ccrepo/lib/"..name
+end

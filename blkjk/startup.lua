@@ -22,7 +22,7 @@ function init()
 	term.setPaletteColor(colors.gray     , 0x363636)
 	term.setPaletteColor(colors.green    , 0x044906)
 
-	surface    = dofile(ak:file("surface"))
+	surface    = dofile(ak:lib("surface"))
 	font       = surface.loadFont(surface.load(ak:file("font")))
 	gothic     = surface.loadFont(surface.load(ak:file("gothic")))
 	gW, gH     = term.getSize()
