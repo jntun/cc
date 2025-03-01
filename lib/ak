@@ -4,6 +4,15 @@ ak = {
 	project                        = nil,
 }
 
+math.round = function(x) return x + 0.5 - (x + 0.5) % 1 end
+function ak:shuffle(tbl)
+  for i = #tbl, 2, -1 do
+    local j = math.random(i)
+    tbl[i], tbl[j] = tbl[j], tbl[i]
+  end
+  return tbl
+end
+
 function ak:bool_str(bool)
     if bool then return "true" else return "false" end
 end
