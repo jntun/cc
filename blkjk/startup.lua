@@ -428,6 +428,7 @@ function hotpath()
 				deck_i = deck_i + 1
 				player.score = score(player.hand)
 				dbg = ""..tostring(player.score)
+				epoch = epoch + 1
 			elseif input_stay_btn.pressed(click_x, click_y) then
 				dbg = "STAY!"
 				hitting = false
@@ -441,7 +442,6 @@ function hotpath()
 
 			if player.score >= 21 then hitting = false end
 
-			epoch = epoch + 1
 			os.sleep(0.01)
 		end
 
