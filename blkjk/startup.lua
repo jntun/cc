@@ -50,7 +50,7 @@ function init()
 	ak:shuffle(deck)
 	idleCards = {}
 	for i=1,4 do
-		idleCards[i] = card_idle_new(math.random(gW), math.random(gH), deck[i]:sub(1, 1), deck[i]:sub(2, 10), colors.red)
+		idleCards[i] = card_idle_new(math.random(70), math.random(60), deck[i]:sub(1, 1), deck[i]:sub(2, 10), colors.red, deck[i])
 	end
 end
 
@@ -537,13 +537,23 @@ function hotpath()
 	until playing == false
 end
 
-function card_idle_new(x, y, num, suit, color)
+function card_idle_new(x, y, num, suit, color, card_str)
 	local card    = {}
+	card.str      = card_str
+		
 	card.delta    = 1
 	card.posX     = x
 	card.posY     = y
-	card.deltaX   = card.delta
-	card.deltaY   = card.delta
+	if math.random(2) > 1 then
+			card.deltaX = -card.delta
+	else
+			card.deltaX = card.delta
+	end
+	if math.random(2) > 1 then
+			card.deltaY   = -card.delta
+	else
+			card.deltaY   = card.delta
+	end
 	card.boxX     = 68
 	card.boxY     = 38
 	card.negX     = -1
