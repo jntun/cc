@@ -186,8 +186,17 @@ function idle()
 		card_update(card)
 	end
 	for _, card in ipairs(idleCards) do
-		card_draw(card)
+		draw_card_face(card.str, card.posX, card.posY)
 	end
+	local header       = "Chedda's"
+	local black        = "Black" 
+	local jack         = "Jack"
+	header_w, header_h = get_centered_text_dims(header)
+	sub_w, sub_h       = get_centered_text_dims(black)
+	jack_w, jack_h     = get_centered_text_dims(jack)
+	screen:drawText(header, gothic, header_w-20, header_h-25, colors.yellow)
+	screen:drawText(black, gothic, sub_w-14, sub_h-10, colors.black)
+	screen:drawText(jack, gothic, jack_w-5, jack_h+5, colors.white)
 	screen:output()
 end
 
@@ -196,7 +205,7 @@ function invalid()
 
 	for _, card in ipairs(idleCards) do
 		card_update(card)
-		card_draw(card)
+		draw_card_face(card.str, card.posX, card.posY)
 	end
 
 	local text = "No cheating"
@@ -215,17 +224,6 @@ function new_game()
 	game.player = player_new()
 	game.op     = STAGE_BET
 	return game  
-end
-
-function card_draw(card)
-	local x, y
-	x = card.posX
-	y = card.posY
-
-	screen:drawSurface(card_face, x, y)
-	screen:push(x, y, 30, 30)
-	screen:drawText(""..card.num, font, 2, 2, card.color)
-	screen:pop()
 end
 
 function score(hand)
