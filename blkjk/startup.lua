@@ -89,9 +89,10 @@ function place_bet(bet)
 	local increment    = 1
 	local info         = ""
 	local dbg_text     = ""
-	local increase_bet = button(54, 46, 63, 50)
-	local decrease_bet = button(18, 46, 27, 50)
-	local place_bet    = button(30, 46, 51, 51)
+	local increase_bet = button(54, 38, 64, 43)
+	local decrease_bet = button(18, 38, 27, 43)
+	local place_bet    = button(30, 38, 51, 44)
+	local quit_btn     = button(2 , 45, 19, 52)
 	local balance = game.player.balance - bet
 
 	if bet >= 8 then
@@ -102,12 +103,16 @@ function place_bet(bet)
 		screen:clear(colors.green)
 
 		local xx = 28
-		local yy = 45
+		local yy = 38
 		screen:fillRect(xx - 11, yy, 10, 5, colors.white)
 		screen:drawText("<", font, xx-9, yy, colors.black)
 		screen:fillRect(xx + 25, yy, 10, 5, colors.white)
 		screen:drawText(">", font, xx+28, yy, colors.black)
 		screen:fillRect(xx+1, yy, 22, 6, colors.white)
+
+		local quit_y = yy + 7
+		screen:fillRect(xx - 27, quit_y, 18, 7, colors.black)
+		screen:drawText("Exit", font, xx - 26, quit_y, colors.white)
 
 		screen:push(-1, -1, gW, gH)
 		local balx, _ = get_centered_text_dims("Balance")
@@ -116,7 +121,14 @@ function place_bet(bet)
 		--screen:drawText(dbg_text, font, balx, baly+13, colors.lime)
 		screen:drawText(info, font, balx, baly+13, colors.lime)
 		screen:drawText("Balance", font, balx+3, baly, colors.yellow)
-		screen:drawText("$"..game.player.balance, font, balx+11, baly+8, colors.yellow)
+
+		local numx = balx+11
+		if game.player.balance >= 100  then
+			numx = numx + 2
+		elseif game.player.balance >= 1000 then
+			numx = numx + 20
+		end
+		screen:drawText("$"..game.player.balance, font, numx, baly+8, colors.yellow)
 
 		if bet >= 10 then
 			betx = betx
@@ -163,6 +175,9 @@ function place_bet(bet)
 			dbg_text = "bet!"
 			if bet == 0 then goto place_bet_pass end
 			loop = false
+		elseif quit_btn.pressed(x, y) then
+			loop = false
+			bet = -1
 		end
 
 		::place_bet_pass::
@@ -216,7 +231,7 @@ function invalid()
 	w, h = get_centered_text_dims(text)
 	screen:drawText(text, font, w, h, colors.red)
 	screen:output()
-	-- TODO: Eject
+	eject()
 end
 
 function new_game()
@@ -343,15 +358,18 @@ function score(hand)
 	return total
 end
 
-function hotpath()
-	if game == nil then
-		game = new_game()
-	end
+function eject()
+	drive.setDiskLabel(game.player.name..":"..tostring(game.player.balance))
+	drive.ejectDisk()
+end
 
+function hotpath()
+	game = new_game()
 	if game.player.valid == false then
 		invalid()
 		return
 	end
+
 	local input_stay_btn  = button(10, 44, 40, 51)
 	local input_hit_btn   = button(45, 44, 67, 52)
 	local double_down_btn = button(0, 0, 0, 0)
@@ -366,6 +384,13 @@ function hotpath()
 		local epoch = 1
 		local doubled_down = false
 		bet = place_bet(bet)
+
+		if bet < 0 then
+			playing = false
+			idle()
+			eject()
+			break
+		end
 
 		local dealer = game_hand()
 		local player = game_hand()
@@ -403,8 +428,8 @@ function hotpath()
 
 			if (game.player.balance) >= bet * 2 and epoch == 1 then -- DO X2
 				double_down_btn = button(70, 46, 79, 52)
-				screen:fillRect(70, 46, 79, 52, colors.red)
-				screen:drawText("X2", font, 71, 47, colors.yellow)
+				screen:fillRect(70, 47, 79, 52, colors.red)
+				screen:drawText("X2", font, 70, 47, colors.yellow)
 			end
 
 			screen:output()
