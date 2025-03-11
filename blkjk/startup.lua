@@ -435,6 +435,7 @@ function hotpath()
 				bet = bet * 2
 				doubled_down = true
 				hitting = false
+				player.score = score(player.hand)
 			end
 
 			if player.score >= 21 then hitting = false end
