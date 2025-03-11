@@ -12,9 +12,8 @@ MAX_BET = 128
 
 function init()
 	running = true
-	m       = peripheral.wrap("top")
-	drive   = peripheral.find("drive")
-
+	m       = peripheral.wrap("top") or error("output monitor needed for blackjack machine operation.")
+	drive   = peripheral.find("drive") or error("disk drive required for blackjack machine operation.")
 	m.setTextScale(0.5)
 	term.redirect(m)
 	term.setPaletteColor(colors.lightGray, 0xc5c5c5)
