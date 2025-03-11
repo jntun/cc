@@ -189,9 +189,18 @@ end
 function player_new()
 	local player     = {}
 	player.id        = drive.getDiskID()
-	player.balance   = 64
+	player.balance   = 0
 	player.name      = "default"
-	player.valid     = true
+	player.valid     = false 
+
+	local player_str = drive.getDiskLabel()
+	if player_str ~= nil then
+		local drive_tbl = ak:split(player_str, ":")
+		player.name    = drive_tbl[1]
+		player.balance = tonumber(drive_tbl[2])
+		player.valid = true
+	end
+
 	return player
 end
 
@@ -607,7 +616,7 @@ end
 
 init()
 while true do
-	if not drive.isDiskPresent() and false then
+	if not drive.isDiskPresent() then
 		idle()
 	else
 		hotpath()
