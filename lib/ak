@@ -4,6 +4,30 @@ ak = {
 	project                        = nil,
 }
 
+function ak:button(x1, y1, x2, y2)
+	local box = {}
+	box[1] = x1
+	box[2] = y1
+	box[3] = x2
+	box[4] = y2
+	for i=1,4 do
+		if box[i] == nil then
+			error("called button() with nil argument")
+		end
+	end
+
+	function pressed(clickX, clickY)
+		if (clickX >= x1 and clickX <= x2) and (clickY >= y1 and clickY <= y2) then
+			return true
+		end
+		return false
+	end
+
+	box.pressed = pressed
+	return box
+end
+
+
 math.round = function(x) return x + 0.5 - (x + 0.5) % 1 end
 function ak:shuffle(tbl)
   for i = #tbl, 2, -1 do
