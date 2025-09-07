@@ -1,5 +1,4 @@
 dofile("ccrepo/lib/ak")
-dofile("ccrepo/lib/enclave")
 
 ak.project = "blkjk"
 
