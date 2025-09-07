@@ -493,7 +493,7 @@ function hotpath()
 		os.sleep(2)
 
 		dealer_i = 1
-		while dealer.score < 17 and dealer.score < player.score do
+		while dealer.score < 17 do
 			dealer.hand[#dealer.hand+1] = deck[deck_i]
 			deck_i = deck_i + 1
 			screen:clear(colors.green)
