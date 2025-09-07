@@ -35,16 +35,19 @@ function init()
 
 	deck = {}
 	local i = 1
-	for _, suit in ipairs({"heart", "diamond", "club", "spade"}) do
-		for _, num in ipairs({"A", "T", "J", "Q", "K"}) do
-			deck[i] = num..suit;
-			i = i + 1
-		end
-		for num = 2, 9, 1 do
-			deck[i] = tostring(num)..suit;
-			i = i + 1
+	for j=1,8 do -- 8 deck dealer
+		for _, suit in ipairs({"heart", "diamond", "club", "spade"}) do
+			for _, num in ipairs({"A", "T", "J", "Q", "K"}) do
+				deck[i] = num..suit;
+				i = i + 1
+			end
+			for num = 2, 9, 1 do
+				deck[i] = tostring(num)..suit;
+				i = i + 1
+			end
 		end
 	end
+
 	ak:shuffle(deck)
 	idleCards = {}
 	for i=1,4 do
