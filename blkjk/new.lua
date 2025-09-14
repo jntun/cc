@@ -7,6 +7,7 @@ ak.project = "blkjk"
 
 OP_IDLE = "idle"
 OP_BET  = "bet"
+OP_GAME = "game"
 
 local aspect, drive, surface, font, gothic, screen, card_face, card_back, gW, gH
 local state = {
