@@ -49,7 +49,6 @@ function init()
 	diamond    = surface.load(ak:file("diamond.nfp"))
 	heart      = surface.load(ak:file("heart.nfp"))
 	spade 	   = surface.load(ak:file("spade.nfp"))
-	game  	   = nil
 
 	deck = {}
 	local i = 1
