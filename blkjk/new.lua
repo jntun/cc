@@ -11,6 +11,9 @@ OP_GAME = "game"
 
 local aspect, drive, surface, font, gothic, screen, card_face, card_back, gW, gH
 local state = {
+	debug = true,
+	width = 79,
+	height = 52,
 	idle_cards = {},
 	header = {},
 	status = {
