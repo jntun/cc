@@ -156,15 +156,17 @@ function draw_card_face(card, x, y)
 end
 
 function debug_outline()
-	local txt = ""..screen.width..", "..screen.height
-	local x, y = get_centered_txt(txt)
-	screen:drawText(txt, font, x, y, colors.lime)
-	local width = 79-1
-	local height = 52-1
-	screen:drawLine(0, 0, 0, height, colors.red)
-	screen:drawLine(0, 0, width, 0, colors.red)
-	screen:drawLine(0, height, width, height, colors.red)
-	screen:drawLine(width, 0, width, height, colors.red)
+	local width = 79
+	local height = 52
+	if screen.width ~= width or screen.height ~= height then
+		local txt = ""..screen.width..", "..screen.height
+		local x, y = get_centered_txt(txt)
+		screen:drawText(txt, font, x, y, colors.lime)
+		screen:drawLine(0, 0, 0, height-1, colors.red)
+		screen:drawLine(0, 0, width-1, 0, colors.red)
+		screen:drawLine(0, height-1, width-1, height-1, colors.red)
+		screen:drawLine(width-1, 0, width-1, height-1, colors.red)
+	end
 end
 
 init()
