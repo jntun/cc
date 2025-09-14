@@ -158,17 +158,22 @@ function draw_card_face(card, x, y)
 	screen:pop()
 end
 
+function correct_screen_size()
+	if screen.width == state.width and screen.height == state.height then
+		return true
+	end
+	return false
+end
+
 function debug_outline()
-	local width = 79
-	local height = 52
-	if screen.width ~= width or screen.height ~= height then
+	if not correct_screen_size() and state.debug then
 		local txt = ""..screen.width..", "..screen.height
 		local x, y = get_centered_txt(txt)
 		screen:drawText(txt, font, x, y, colors.lime)
-		screen:drawLine(0, 0, 0, height-1, colors.red)
-		screen:drawLine(0, 0, width-1, 0, colors.red)
-		screen:drawLine(0, height-1, width-1, height-1, colors.red)
-		screen:drawLine(width-1, 0, width-1, height-1, colors.red)
+		screen:drawLine(0, 0, 0, state.height-1, colors.red)
+		screen:drawLine(0, 0, state.width-1, 0, colors.red)
+		screen:drawLine(0, state.height-1, state.width-1, state.height-1, colors.red)
+		screen:drawLine(state.width-1, 0, state.width-1, state.height-1, colors.red)
 	end
 end
 
