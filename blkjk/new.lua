@@ -177,25 +177,69 @@ function debug_outline()
 	end
 end
 
-init()
-while true do
-	screen:clear(colors.green)
-
-	if state.status.op == OP_IDLE then
-		for _, card in ipairs(state.idle_cards) do
-			card_update(card)
-			draw_card_face(card.str, card.posX, card.posY)
+function hotpath()
+	while true do
+		if not correct_screen_size() and not state.debug then
+			screen:clear(colors.red)
+			local txt = "Please configure a 4x4 advanced monitor setup for Blackjack"
+			local x, y = get_centered_txt(txt)
+			screen:drawText(txt, font, x, y, colors.yellow)
+			screen:output()
+			return
 		end
-		local header_w, header_h = get_centered_txt(state.header[1])
-		local black_w, black_h = get_centered_txt(state.header[2])
-		local jack_w, jack_h = get_centered_txt(state.header[3])
-		screen:drawText(state.header[1], gothic, header_w-20, header_h-25, colors.yellow)
-		screen:drawText(state.header[2], gothic, black_w-14, black_h-10, colors.black)
-		screen:drawText(state.header[3], gothic, jack_w-5, jack_h+5, colors.white)
-	elseif state.status.op == OP_BET then
+
+		screen:clear(colors.green)
+
+		if state.status.op == OP_IDLE then
+			idle()
+		elseif state.status.op == OP_BET then
+			bet()
+		elseif state.status.op == OP_GAME then
+			game()
+		end
+
+		debug_outline()
+		screen:output()
+		os.sleep(0.01)
+	end
+end
+
+function input()
+	while true do
+		state.event = {os.pullEvent("monitor_touch")}
+		os.sleep(0.5)
+	end
+end
+
+function idle()
+	for _, card in ipairs(state.idle_cards) do
+		card_update(card)
+		draw_card_face(card.str, card.posX, card.posY)
+	end
+	local header_w, header_h = get_centered_txt(state.header[1])
+	local black_w, black_h = get_centered_txt(state.header[2])
+	local jack_w, jack_h = get_centered_txt(state.header[3])
+	screen:drawText(state.header[1], gothic, header_w-20, header_h-25, colors.yellow)
+	screen:drawText(state.header[2], gothic, black_w-14, black_h-10, colors.black)
+	screen:drawText(state.header[3], gothic, jack_w-5, jack_h+5, colors.white)
+end
+
+function bet()
+	if not state.event then
+		screen:drawText("no event", font, 0, 0, colors.lime)
+		return
 	end
 
-	debug_outline()
-	screen:output()
-	os.sleep(0.01)
+	local x = state.event[3]
+	local y = state.event[4]
+
+	local txt = ""..x..", "..y
+	local cX, cY = get_centered_txt(txt)
+	screen:drawText(txt, font, cX, cY, colors.lime)
 end
+
+function game()
+end
+
+init()
+parallel.waitForAny(hotpath, input)
